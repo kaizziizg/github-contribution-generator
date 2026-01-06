@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { DEFAULT_PALETTE, FONT_5X7 } from "./utils/constant";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -22,18 +22,6 @@ import { buildYearDateGrid, clamp, makeEmptyGrid, rasterizeText5x7 } from "./uti
 import { formatISODate, inYear, type WeekStart } from "./utils/date";
 import { generateRepo } from "./api";
 import Footer from "./components/Footer";
-
-interface RepoInfo {
-  repoName: string;
-  user: string;
-  email: string;
-  total: number;
-  contributions: Array<{
-    date: string;
-    count: number;
-    time: string;
-  }>;
-}
 
 type RenderArgs = {
   text: string;
