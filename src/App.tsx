@@ -9,6 +9,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { buildYearDateGrid, clamp, makeEmptyGrid, rasterizeText5x7 } from "./utils/dateGrid";
 import { formatISODate, inYear, type WeekStart } from "./utils/date";
 import { generateRepo } from "./api";
@@ -37,50 +46,6 @@ type RenderArgs = {
   year: number;
   dates: Date[][];
 };
-
-function generateRepoInfo(
-  grid: number[][],
-  dates: Date[][],
-  repoName: string,
-  user: string,
-  email: string,
-  timeMode: 'random' | 'custom',
-  customTime: string
-): RepoInfo {
-  const contributions: Array<{ date: string; count: number; time: string }> = [];
-
-  for (let w = 0; w < grid.length; w++) {
-    for (let d = 0; d < grid[w].length; d++) {
-      if (grid[w][d] > 0) {
-        let time: string;
-
-        if (timeMode === 'random') {
-          // 生成隨機時間 (00:00:00 - 23:59:59)
-          const hour = Math.floor(Math.random() * 24);
-          const minute = Math.floor(Math.random() * 60);
-          const second = Math.floor(Math.random() * 60);
-          time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`;
-        } else {
-          time = customTime;
-        }
-
-        contributions.push({
-          date: formatISODate(dates[w][d]),
-          count: grid[w][d] / 4,
-          time
-        });
-      }
-    }
-  }
-
-  return {
-    repoName,
-    user,
-    email,
-    total: contributions.length,
-    contributions
-  };
-}
 
 function renderToGrid(args: RenderArgs) {
   const {
@@ -220,7 +185,7 @@ export default function App() {
   const [year, setYear] = useState<number>(nowYear);
   const [weekStart, setWeekStart] = useState<WeekStart>("sun");
 
-  const [text, setText] = useState("AB12");
+  const [text, setText] = useState("WELCOME!");
   const [repoName, setRepoName] = useState("my-contributions-repo");
   const [user, setUser] = useState("username");
   const [email, setEmail] = useState("user@example.com");
@@ -233,6 +198,9 @@ export default function App() {
   const [invert, setInvert] = useState(false);
   const [noise, _setNoise] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const dateGrid = useMemo(() => buildYearDateGrid(year, weekStart), [year, weekStart]);
 
@@ -309,7 +277,7 @@ export default function App() {
         contributions
       });
       
-      // 創建下載連結
+      // get download link
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -319,9 +287,10 @@ export default function App() {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
       
-      alert(`✅ Repository generated successfully!\n\nDownloading ${repoName}.zip...`);
+      setShowSuccessDialog(true);
     } catch (error) {
-      alert(`❌ Failed to generate repository:\n\n${error instanceof Error ? error.message : 'Unknown error'}`);
+      setErrorMessage(error instanceof Error ? error.message : 'Unknown error');
+      setShowErrorDialog(true);
       console.error('Error generating repository:', error);
     } finally {
       setIsGenerating(false);
@@ -332,7 +301,7 @@ export default function App() {
     <div className="min-h-screen bg-[#0d1117] p-6">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white">GitHub Contributions Chart Generator</h1>
+          <h1 className="text-3xl font-bold text-white">GitHub Contribution Generator</h1>
           <p className="mt-2 text-sm text-[#8b949e]">
             Year: {year} | Week Start: {weekStart.toUpperCase()} | Grid Start: {formatISODate(dateGrid.gridStart)} | Weeks: {dateGrid.weeks}
           </p>
@@ -584,6 +553,62 @@ export default function App() {
           </Card>
         </div>
       </div>
+
+      {/* Success Dialog */}
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <span className="text-2xl">✅</span>
+              Repository Generated Successfully!
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 pt-2">
+              <p className="text-[#e6edf3]">
+                You can create a new repository on GitHub now.
+              </p>
+              <div className="space-y-1.5 text-sm">
+                <p>Just push it and wait about 5 minutes to 24 hours.</p>
+                <p>You can see the chart in your profile under the contribution chart section.</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowSuccessDialog(false)}>
+              Got it!
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Error Dialog */}
+      <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <span className="text-2xl">❌</span>
+              Download Failed
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 pt-2">
+              <p className="text-[#e6edf3]">
+                Download failed. Please try again.
+              </p>
+              <p className="text-sm">
+                If this error still occurs, please contact <span className="font-semibold text-[#e6edf3]">gnar</span>.
+              </p>
+              {errorMessage && (
+                <div className="mt-3 rounded-md bg-[#21262d] border border-[#30363d] p-3">
+                  <p className="text-xs font-mono text-[#ff7b72]">{errorMessage}</p>
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowErrorDialog(false)}>
+              Close
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

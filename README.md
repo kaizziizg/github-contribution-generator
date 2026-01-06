@@ -1,73 +1,62 @@
-# React + TypeScript + Vite
+# GitHub Contribution Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Create custom patterns and text in your GitHub contribution graph
+> try in [GitHub Contribution Generator](https://tool.gnar.cc/gitHub-contribution-generator)
 
-Currently, two official plugins are available:
+An interactive tool that allows you to design custom text and patterns for your GitHub contribution heatmap.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- 🎨 Customize year and week start day
+- ✏️ Support text input (check supported characters)
+- 🎯 Adjust spacing, alignment, and offset
+- 🔄 Invert chart display
+- 📊 Real-time contribution graph preview
+- 💾 One-click repository generation with commit history
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## 📖 Usage
 
-## Expanding the ESLint configuration
+### Basic Settings
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Year**: Enter the target year (e.g., 2026)
+2. **Week Start**: Select week start day (Sunday/Monday)
+3. **Content**: Enter the text you want to display (e.g., AB12)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Advanced Settings
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Spacing**: Adjust character spacing (1-10)
+- **Horizontal Alignment**: Choose alignment (Left/Center/Right)
+- **X Offset**: Horizontal offset in weeks
+- **Y Offset**: Vertical offset in days
+- **Invert**: Reverse the display effect
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Generate Repository
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Click the "Generate Repository" button to automatically create a Git repository with the corresponding commit history.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🎨 Supported Characters
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Click the "Supported Characters?" link in the interface to view all available characters and symbols.
+
+## 🛠️ Tech Stack
+
+- React.js
+- tailwind
+- shadcn/ui
+- Git automation scripts
+
+## 📝 License
+
+MIT License
+
+## ⚠️ Disclaimer
+
+This tool is for educational and entertainment purposes only. Please do not abuse the GitHub contribution system.
+
+## 🤝 Contributing
+
+Issues and Pull Requests are welcome!
+
+---
+
+Made with ❤️
