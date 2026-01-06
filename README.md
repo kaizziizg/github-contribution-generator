@@ -1,7 +1,7 @@
 # GitHub Contribution Generator
 
 > Create custom patterns and text in your GitHub contribution graph
-> try in [GitHub Contribution Generator](https://tool.gnar.cc/gitHub-contribution-generator)
+> try in [GitHub Contribution Generator](https://tool.gnar.cc/github-contribution-generator)
 
 An interactive tool that allows you to design custom text and patterns for your GitHub contribution heatmap.
 
