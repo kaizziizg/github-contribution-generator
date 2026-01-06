@@ -21,6 +21,7 @@ import {
 import { buildYearDateGrid, clamp, makeEmptyGrid, rasterizeText5x7 } from "./utils/dateGrid";
 import { formatISODate, inYear, type WeekStart } from "./utils/date";
 import { generateRepo } from "./api";
+import Footer from "./components/Footer";
 
 interface RepoInfo {
   repoName: string;
@@ -609,6 +610,9 @@ export default function App() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
